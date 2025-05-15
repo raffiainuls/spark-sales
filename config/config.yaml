@@ -1,0 +1,15 @@
+kafka:
+  bootstrap_servers: "localhost:9093"
+  static_topics:
+    - table.public.tbl_product
+    - table.public.tbl_promotions
+    - table.public.tbl_branch
+    - table.public.tbl_customers
+    - table.public.order_status
+    - table.public.payment_method
+    - table.public.payment_status
+    - table.public.shipping_status
+    - table.public.tbl_employee
+  stream_topics:
+    - table.public.tbl_sales
+
