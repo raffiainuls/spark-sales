@@ -178,6 +178,19 @@ This project is a Streaming and batching data pipeline project. This project usi
 2. prepare zookeeper & kafka first, and make sure your zookeeper and kafka allredy running correctly
 3. wait until zookeeper and kafka already running correctly, you can running ```/spark-sales/database/producer.py``` this file will send data in csv file that lists in list_file.txt into kafka
 4. if all topics for each table already available in kafka you can run ```/flink-sales/stream.py``` this file will generate data streaming into topic tbl_sales in kafka. in this python script there is some calculations metrics for generate value in some field, so the value that produce not too random.
+5. In this project there are 2 type job streaming job and batching job. there is only one streaming job and this job will be create table fact_sales and this job will be always running and execute query for fact_sales. the data for fact_sales storange in delta lake in ```/spark-sales/data/werehouse/fact_sales_delta/```. because this is streaming job this directory always updated.
+6. For batching Job there are 13 jobs. on every job will be execute query table for each table and the data for each table will be storange in delta lake and also sink into postgres.
+7. we can check all job streaming and batching in ```/spark-sales/etl/```
+8. first we must to running streaming job, make sure we in root directory in this project ```/spark-sales/``` and then we can run the streaming job like this
+   ```bash
+   python -m etl.fact_sales.fact_sales
+9. after running streaming job we can also running batching job, and this project use dagster for handling schedulling for running batching job.
+10. for simple tutorial we can use dagster dev, if we use that If we use it, we don't need to bother configuring dagster like dagster.yaml, workspace.yaml, and pyproject.toml
+11. after running the dagster you can cek in ```localhost:3000```
+12. if you want to change about schedulling, configuration jobs, etc you can check in ```/spark-sales/dagster_code/```
+
+
+
 
  
 
