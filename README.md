@@ -1,7 +1,8 @@
 ## Spark Sales  Data Pipeline 
 
 #### Overview 
-![flowchart_spark-sales](https://github.com/user-attachments/assets/6376beab-f636-4a7e-af14-0159aa8980ef)
+![flowchart_fix](https://github.com/user-attachments/assets/c3746ce5-6f82-4be4-854a-70a28c4baf1c)
+
 
 This project is a Streaming and batching data pipeline project. This project using kafka for real-time data streaming and apache spark for ETL Streaming and batching for execute query table, and this project also use deltalake for storange data, and postgres for database.
 
@@ -143,5 +144,41 @@ This project is a Streaming and batching data pipeline project. This project usi
    |-- last_id.txt                 # this file save last_id that most_recent create in stream.py 
    |-- stream.py                   # file python that create data streaming and send into kafka 
  </pre>
+
+
+### Project Workflow 
+1. Producer Kafka
+   - python script (/spark-sales/database/producer.py) will read list file csv in list_file.txt that containing database tables that saves into csv, and then from the list file csv python script will access csv file and then produce data in file csv into kafka. table that send to kafka such as : ```tbl_order_status, tbl_payment_method, tb_payment_status, tbl_shipping_status, tbl_employee, tbl_promotions, tbl_sales, tbl_product, tbl_schedulle_emp, tbl_customers, and tbl_branch``` and in this project all table above save into delta lake in directory ```/spark-sales/data/table/``` and this data delta lake used to load data on several spark jobs
+2. Stream Data Generation
+   - This python script if it run will generate data and produce data into kafka topics table tbl_sales, this python script also have metrics thatis adjusted to the table in the csv file that was previously sent to kafka, so the generated data contains several calculations for several fields so that the data produced is not too random.
+3. Streaming Pyspark Job
+   - in directory ```/spark-sales/etl/``` it is directory for all spark job and in this project there is job for streaming, in this project there is table fact_sales and this table will be streaming, this job will load data table in delta lake ```/spark-sales/data/table/``` and execute query for fact_sales and then save data fact_sales into delta lake ```/spark-sales/data/werehouse/fact_sales_delta/``` and the job for this streaming is always running.
+4. Batching Pyspark Job
+   - In this project besides streaming job there are also severals job for batching job, this job will be load data from delta lake in ```/spark-sales/data/werehouse/fact_sales_delta/``` and also data table in ```/spark-sales/data/table/``` after load data table from delta lake the jobs will be execute query for any tables and save it data table into delta lake ```/spark-sales/data/analytics/```.
+5. DeltaLake Storange
+   - In this project delta lake save in local directory in ```/spark-sales/data/``` in this directory  store data from source tables, streaming job result tables and also batching job result tables.
+6. Dagster Job Schedulling
+   - In this project use dagster for schedulling batching Pyspark Job
+7. Python Function For Sink Postgres
+   - In batching jobs, besides saving data into Delta Lake, there is also a function to sink data into Postgres.
+  
+### Instalation & Setup 
+#### Prerequisites 
+- Apache Spark
+- Zookeeper & Kafka (in this project i use kafka and zookeeper in local windows)
+- Python
+- Delta Lake
+- Postgres
+- Dagster
+
+### Steps 
+1. clone this repository
+   ```bash
+   https://github.com/raffiainuls/spark-sales
+2. prepare zookeeper & kafka first, and make sure your zookeeper and kafka allredy running correctly
+3. wait until zookeeper and kafka already running correctly, you can running ```/spark-sales/database/producer.py``` this file will send data in csv file that lists in list_file.txt into kafka
+4. if all topics for each table already available in kafka you can run ```/flink-sales/stream.py``` this file will generate data streaming into topic tbl_sales in kafka. in this python script there is some calculations metrics for generate value in some field, so the value that produce not too random.
+
+ 
 
   
