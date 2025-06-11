@@ -26,7 +26,7 @@ This project is a Streaming and batching data pipeline project. This project usi
 
 ### Project Structure
 <pre>  spark-sales/
-   |-- .dagster/                      
+   |-- .dagster/                      # Directory Configuration dagster
        |-- .nux/                    
        |-- .telemetry/                    
        |-- history/               
@@ -34,13 +34,13 @@ This project is a Streaming and batching data pipeline project. This project usi
        |-- schedules/
        |-- storage/
        |-- dagster.yaml
-   |-- config/                   
+   |-- config/                      # Directory config.yaml for configuration stream.py (streaming code)
        |-- config.yaml  
-   |-- dagster_code/                   
-       |-- jobs.py  
-       |-- repository.py  
-       |-- schedules.py  
-   |-- data/                   
+   |-- dagster_code/                # Directory  Dagster
+       |-- jobs.py                  # configurasi list job that run in dagster
+       |-- repository.py            # file repository Dagster
+       |-- schedules.py             # Configurasi schedulling dagster
+   |-- data/                        # directory for storange deltalake
        |-- analytics/
        |-- checkpoints/
        |-- table/
@@ -57,13 +57,14 @@ This project is a Streaming and batching data pipeline project. This project usi
        |-- df_sales.csv                    
        |-- df_schedule.csv              
        |-- df_shipping_status.csv
+       |-- producer.py           # file python for send data in file csv to kafka 
        |-- list_file.txt         # this file is useful for producer.py can know which csv file is used for 
-   |-- etl/      
+   |-- etl/                      # directory etl or spark job 
        |-- branch_daily_finance_performance/
-            |-- branch_daily_finance_performance.py
-            |-- sql.py
+            |-- branch_daily_finance_performance.py            # Main python file for etl branch_daily_finance_performance
+            |-- sql.py                                         # python file contains sql for branch_daily_finance_performance
        |-- branch_finance_performance/
-            |-- branch_finance_performance.py
+            |-- branch_finance_performance.py                  
             |-- sql.py
        |-- branch_monthly_finance_performance/
             |-- branch_monthly_finance_performance.py
@@ -102,8 +103,8 @@ This project is a Streaming and batching data pipeline project. This project usi
             |-- sum_transactions.py
             |-- sql.py
        |-- tbl_branch/
-            |-- parser.py
-            |-- shema.py
+            |-- parser.py               # function parser for casting data from kafka
+            |-- shema.py                # schema definition for tbl_branch from kafka
        |-- tbl_customers/
             |-- parser.py
             |-- shema.py
@@ -123,15 +124,15 @@ This project is a Streaming and batching data pipeline project. This project usi
             |-- weeakly_finance_performance.py
             |-- sql.py
    |-- helper/     
-            |-- write_read_delta.py
+            |-- write_read_delta.py                     # function for write and read data from deltalake
    |-- jars/     
-            |-- delta-sharing-spark_2.12-3.3.1.jar
+            |-- delta-sharing-spark_2.12-3.3.1.jar      # jar deltalake for spark 
    |-- kafka/     
-            |-- kafka_stream.py
-   |-- postgres_writer/     
+            |-- kafka_stream.py                         # function spark for consume data from kafka in streaming and batching
+   |-- postgres_writer/                                 # directory function for sink to postgres
             |-- pg_writer.py
             |-- postgres_writer.py
-   |-- spark/     
+   |-- spark/                                           # directory for function spark session in streaming in batching 
             |-- spark_session_batch.py
             |-- spark_session.py
    |-- .env  
@@ -141,5 +142,6 @@ This project is a Streaming and batching data pipeline project. This project usi
    |-- last_id_backup              # backup list_id file
    |-- last_id.txt                 # this file save last_id that most_recent create in stream.py 
    |-- stream.py                   # file python that create data streaming and send into kafka 
+ </pre>
 
   
